@@ -28,7 +28,7 @@ var GameManipulator = {
   gamestate: 'OVER',
 
   // GameOver Position
-  gameOverOffset: [190, -75],
+  gameOverOffset: [190, -82],
 
   // Stores an array of "sensors" (Ray tracings)
   // Positions are always relative to global "offset"
@@ -59,16 +59,16 @@ GameManipulator.findGamePosition = function () {
 
   for (var x = 20; x < screenSize.width; x+= skipXFast) {
     dinoPos = Scanner.scanUntil(
-      // Start position
-      [x, 80],
-      // Skip pixels
-      [0, skipXFast],
-      // Searching Color
-      COLOR_DINOSAUR,
-      // Normal mode (not inverse)
-      false,
-      // Iteration limit
-      500 / skipXFast);
+        // Start position
+        [x, 80],
+        // Skip pixels
+        [0, skipXFast],
+        // Searching Color
+        COLOR_DINOSAUR,
+        // Normal mode (not inverse)
+        false,
+        // Iteration limit
+        500 / skipXFast);
 
     if (dinoPos) {
       break;
@@ -81,16 +81,16 @@ GameManipulator.findGamePosition = function () {
 
   for (var x = dinoPos[0] - 50; x <= dinoPos[0]; x += 1) {
     pos = Scanner.scanUntil(
-      // Start position
-      [x, dinoPos[1] - 2],
-      // Skip pixels
-      [0, 1],
-      // Searching Color
-      COLOR_DINOSAUR,
-      // Normal mode (not inverse)
-      false,
-      // Iteration limit
-      100);
+        // Start position
+        [x, dinoPos[1] - 2],
+        // Skip pixels
+        [0, 1],
+        // Searching Color
+        COLOR_DINOSAUR,
+        // Normal mode (not inverse)
+        false,
+        // Iteration limit
+        100);
 
     if (pos) {
       break;
@@ -106,7 +106,7 @@ GameManipulator.findGamePosition = function () {
   var endPos = pos;
 
   while (robot.getPixelColor(endPos[0] + 3, endPos[1]) == COLOR_DINOSAUR) {
-     endPos = Scanner.scanUntil(
+    endPos = Scanner.scanUntil(
         // Start position
         [endPos[0] + 2, endPos[1]],
         // Skip pixels
@@ -137,12 +137,12 @@ GameManipulator.findGamePosition = function () {
 GameManipulator.readGameState = function () {
   // Read GameOver
   var found = Scanner.scanUntil(
-    [
-      GameManipulator.offset[0] + GameManipulator.gameOverOffset[0],
-      GameManipulator.offset[1] + GameManipulator.gameOverOffset[1]
-    ],
+      [
+        GameManipulator.offset[0] + GameManipulator.gameOverOffset[0],
+        GameManipulator.offset[1] + GameManipulator.gameOverOffset[1]
+      ],
 
-    [2, 0], COLOR_DINOSAUR, false, 20);
+      [2, 0], COLOR_DINOSAUR, false, 20);
 
   if (found && GameManipulator.gamestate != 'OVER') {
     GameManipulator.gamestate = 'OVER';
@@ -156,12 +156,19 @@ GameManipulator.readGameState = function () {
 
     // console.log('GAME OVER: '+GameManipulator.points);
 
+    // var fs = require('fs');
+    //
+    // fs.appendFileSync('points.txt', GameManipulator.points + '\n' );
+    // fs.appendFileSync('lastScore.txt', GameManipulator.lastScore + '\n' );
+
   } else if (!found && GameManipulator.gamestate != 'PLAYING') {
     GameManipulator.gamestate = 'PLAYING';
 
     // Clear points
     GameManipulator.points = 0;
     GameManipulator.lastScore = 0;
+
+
 
     // Clear keys
     GameManipulator.setGameOutput(0.5);
@@ -211,7 +218,7 @@ GameManipulator.startNewGame = function (next) {
       GameManipulator.reloadPage();
       setTimeout(function() {
         // Once reloaded we wait 0.5sec for it to let us start the game with a space.
-          robot.keyTap(' ');
+        robot.keyTap(' ');
       }, 500);
     }, 300);
 
@@ -289,7 +296,7 @@ GameManipulator.readSensors = function () {
     var forward = sensor.value * GameManipulator.width * 0.8 * sensor.length;
 
     var end = Scanner.scanUntil(
-      // console.log(
+        // console.log(
         // Start position
         [start[0], start[1]],
         // Skip pixels
@@ -310,11 +317,11 @@ GameManipulator.readSensors = function () {
 
       // Calculate size of obstacle
       var endPoint = Scanner.scanUntil(
-        [end[0] + 75, end[1]],
-        [-2, 0],
-        COLOR_DINOSAUR,
-        false,
-        75 / 2
+          [end[0] + 75, end[1]],
+          [-2, 0],
+          COLOR_DINOSAUR,
+          false,
+          75 / 2
       );
 
       // If no end point, set the start point as end
@@ -330,6 +337,10 @@ GameManipulator.readSensors = function () {
         sensor.size = sizeTmp;
       }
 
+      // var fs = require('fs');
+      //
+      // fs.appendFileSync('points.txt', GameManipulator.points + '\n' );
+      // fs.appendFileSync('lastScore.txt', GameManipulator.lastScore + '\n' );
 
       // We use the current score to check for object equality
       sensor.lastScore = GameManipulator.points;

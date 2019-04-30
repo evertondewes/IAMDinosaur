@@ -13,8 +13,10 @@ var savegame = function(){
 
   UI.logger.log('Saving '+jsonGenomes.length+' genomes...');
 
+  var generatorName = ("00000" + UI.learner.generation).slice(-5);
+
   var dir = './genomes';
-  var fileName = dir + '/gen_'+UI.learner.generation+'_'+Date.now()+'.json';
+  var fileName = dir + '/gen_'+ generatorName +'_'+'_'+Date.now()+'.json';
   fs.writeFile(fileName, JSON.stringify(jsonGenomes), function (err){
     if (err) {
       UI.logger.log('Failed to save! '+err);
@@ -117,12 +119,12 @@ UI.init = function (gameManipulator, learner) {
   });
 
   UI.btnSave.on('click', function(){
-      savegame();
+    savegame();
   });
 
- screen.key(['o','O'], function(){
-   savegame();
- });
+  screen.key(['o','O'], function(){
+    savegame();
+  });
 
   screen.key(['escape', 'q', 'C-c'], function(ch, key) {
     return process.exit(0);
